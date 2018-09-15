@@ -1,0 +1,34 @@
+
+html {
+    height: 100%;
+    width: 100%;
+    display: table;
+    overflow: hidden;
+}
+
+body {
+    height: 100%;
+    width: 100%;
+    display: table-row;
+    background-color: black;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+}
+
+h3 {
+    font-size: 24pt;
+    margin: 5px;
+    padding: 5px;
+}
+
+hr {
+    color: white;
+}
+
+.outerContainer {
+    height: 100%;
+    width: 100%;
+    display: table-cell;
+    border: 5px solid white;
+    border-radius: 15px;
+}

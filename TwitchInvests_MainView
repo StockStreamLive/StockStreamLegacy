@@ -1,0 +1,423 @@
+{
+    "current_program_scene": "Scene",
+    "current_scene": "Scene",
+    "current_transition": "Fade",
+    "modules": {
+        "output-timer": {
+            "autoStartRecordTimer": false,
+            "autoStartStreamTimer": false,
+            "recordTimerHours": 0,
+            "recordTimerMinutes": 0,
+            "recordTimerSeconds": 30,
+            "streamTimerHours": 0,
+            "streamTimerMinutes": 0,
+            "streamTimerSeconds": 30
+        }
+    },
+    "name": "TwitchInvests_MainView",
+    "preview_locked": false,
+    "quick_transitions": [
+        {
+            "duration": 300,
+            "hotkeys": [],
+            "id": 1,
+            "name": "Cut"
+        },
+        {
+            "duration": 300,
+            "hotkeys": [],
+            "id": 2,
+            "name": "Fade"
+        }
+    ],
+    "scaling_mode": 0,
+    "scene_order": [
+        {
+            "name": "Scene"
+        }
+    ],
+    "sources": [
+        {
+            "deinterlace_field_order": 0,
+            "deinterlace_mode": 0,
+            "enabled": true,
+            "flags": 0,
+            "hotkeys": {
+                "qtwebkit.reload": []
+            },
+            "id": "qtwebkit-source",
+            "mixers": 0,
+            "muted": false,
+            "name": "LastCommand",
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "settings": {
+                "height": 100,
+                "url": "0.0.0.0:4567/lastCommand.html",
+                "width": 700
+            },
+            "sync": 0,
+            "volume": 1.0
+        },
+        {
+            "deinterlace_field_order": 0,
+            "deinterlace_mode": 0,
+            "enabled": true,
+            "flags": 0,
+            "hotkeys": {
+                "qtwebkit.reload": []
+            },
+            "id": "qtwebkit-source",
+            "mixers": 0,
+            "muted": false,
+            "name": "TopCommands",
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "settings": {
+                "height": 340,
+                "url": "0.0.0.0:4567/topCommands.html",
+                "width": 350
+            },
+            "sync": 0,
+            "volume": 1.0
+        },
+        {
+            "deinterlace_field_order": 0,
+            "deinterlace_mode": 0,
+            "enabled": true,
+            "flags": 0,
+            "hotkeys": {
+                "qtwebkit.reload": []
+            },
+            "id": "qtwebkit-source",
+            "mixers": 0,
+            "muted": false,
+            "name": "AssetsList",
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "settings": {
+                "height": 900,
+                "url": "0.0.0.0:4567/assetsList.html",
+                "width": 425
+            },
+            "sync": 0,
+            "volume": 1.0
+        },
+        {
+            "deinterlace_field_order": 0,
+            "deinterlace_mode": 0,
+            "enabled": true,
+            "flags": 0,
+            "hotkeys": {
+                "qtwebkit.reload": []
+            },
+            "id": "qtwebkit-source",
+            "mixers": 0,
+            "muted": false,
+            "name": "LiveCommands",
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "settings": {
+                "height": 625,
+                "url": "0.0.0.0:4567/liveCommands.html",
+                "width": 350
+            },
+            "sync": 0,
+            "volume": 1.0
+        },
+        {
+            "deinterlace_field_order": 0,
+            "deinterlace_mode": 0,
+            "enabled": true,
+            "flags": 0,
+            "hotkeys": {
+                "qtwebkit.reload": []
+            },
+            "id": "qtwebkit-source",
+            "mixers": 0,
+            "muted": false,
+            "name": "Ticker",
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "settings": {
+                "height": 50,
+                "url": "0.0.0.0:4567/ticker.html",
+                "width": 1000
+            },
+            "sync": 0,
+            "volume": 1.0
+        },
+        {
+            "deinterlace_field_order": 0,
+            "deinterlace_mode": 0,
+            "enabled": true,
+            "flags": 0,
+            "hotkeys": {
+                "qtwebkit.reload": []
+            },
+            "id": "qtwebkit-source",
+            "mixers": 0,
+            "muted": false,
+            "name": "AccountStatus",
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "settings": {
+                "height": 110,
+                "url": "0.0.0.0:4567/accountStatus.html",
+                "width": 300
+            },
+            "sync": 0,
+            "volume": 1.0
+        },
+        {
+            "deinterlace_field_order": 0,
+            "deinterlace_mode": 0,
+            "enabled": true,
+            "flags": 0,
+            "hotkeys": {
+                "qtwebkit.reload": []
+            },
+            "id": "qtwebkit-source",
+            "mixers": 0,
+            "muted": false,
+            "name": "InfoMessage",
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "settings": {
+                "height": 424,
+                "url": "http://0.0.0.0:4567/infoMessage.html",
+                "width": 1024
+            },
+            "sync": 0,
+            "volume": 1.0
+        },
+        {
+            "deinterlace_field_order": 0,
+            "deinterlace_mode": 0,
+            "enabled": true,
+            "flags": 0,
+            "hotkeys": {
+                "OBSBasic.SelectScene": [],
+                "libobs.hide_scene_item.AccountStatus": [],
+                "libobs.hide_scene_item.AssetsList": [],
+                "libobs.hide_scene_item.InfoMessage": [],
+                "libobs.hide_scene_item.LastCommand": [],
+                "libobs.hide_scene_item.LiveCommands": [],
+                "libobs.hide_scene_item.Ticker": [],
+                "libobs.hide_scene_item.TopCommands": [],
+                "libobs.show_scene_item.AccountStatus": [],
+                "libobs.show_scene_item.AssetsList": [],
+                "libobs.show_scene_item.InfoMessage": [],
+                "libobs.show_scene_item.LastCommand": [],
+                "libobs.show_scene_item.LiveCommands": [],
+                "libobs.show_scene_item.Ticker": [],
+                "libobs.show_scene_item.TopCommands": []
+            },
+            "id": "scene",
+            "mixers": 0,
+            "muted": false,
+            "name": "Scene",
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "settings": {
+                "items": [
+                    {
+                        "align": 5,
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_align": 0,
+                        "bounds_type": 0,
+                        "crop_bottom": 0,
+                        "crop_left": 0,
+                        "crop_right": 0,
+                        "crop_top": 0,
+                        "name": "InfoMessage",
+                        "pos": {
+                            "x": 399.0,
+                            "y": 424.89996337890625
+                        },
+                        "rot": 0.0,
+                        "scale": {
+                            "x": 1.09765625,
+                            "y": 1.0980000495910645
+                        },
+                        "scale_filter": "disable",
+                        "visible": true
+                    },
+                    {
+                        "align": 5,
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_align": 0,
+                        "bounds_type": 0,
+                        "crop_bottom": 0,
+                        "crop_left": 0,
+                        "crop_right": 0,
+                        "crop_top": 0,
+                        "name": "Ticker",
+                        "pos": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "rot": 0.0,
+                        "scale": {
+                            "x": 1.9199999570846558,
+                            "y": 1.9199999570846558
+                        },
+                        "scale_filter": "disable",
+                        "visible": true
+                    },
+                    {
+                        "align": 5,
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_align": 0,
+                        "bounds_type": 0,
+                        "crop_bottom": 0,
+                        "crop_left": 0,
+                        "crop_right": 0,
+                        "crop_top": 0,
+                        "name": "AccountStatus",
+                        "pos": {
+                            "x": 0.0,
+                            "y": 88.0
+                        },
+                        "rot": 0.0,
+                        "scale": {
+                            "x": 1.3500000238418579,
+                            "y": 1.3545454740524292
+                        },
+                        "scale_filter": "disable",
+                        "visible": true
+                    },
+                    {
+                        "align": 5,
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_align": 0,
+                        "bounds_type": 0,
+                        "crop_bottom": 0,
+                        "crop_left": 0,
+                        "crop_right": 0,
+                        "crop_top": 0,
+                        "name": "LiveCommands",
+                        "pos": {
+                            "x": 1521.0,
+                            "y": 455.0
+                        },
+                        "rot": 0.0,
+                        "scale": {
+                            "x": 1.1399999856948853,
+                            "y": 1.1407999992370605
+                        },
+                        "scale_filter": "disable",
+                        "visible": true
+                    },
+                    {
+                        "align": 5,
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_align": 0,
+                        "bounds_type": 0,
+                        "crop_bottom": 0,
+                        "crop_left": 0,
+                        "crop_right": 0,
+                        "crop_top": 0,
+                        "name": "AssetsList",
+                        "pos": {
+                            "x": 0.0,
+                            "y": 236.0
+                        },
+                        "rot": 0.0,
+                        "scale": {
+                            "x": 0.93882352113723755,
+                            "y": 0.93777775764465332
+                        },
+                        "scale_filter": "disable",
+                        "visible": true
+                    },
+                    {
+                        "align": 5,
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_align": 0,
+                        "bounds_type": 0,
+                        "crop_bottom": 0,
+                        "crop_left": 0,
+                        "crop_right": 0,
+                        "crop_top": 0,
+                        "name": "TopCommands",
+                        "pos": {
+                            "x": 1523.0,
+                            "y": 73.0
+                        },
+                        "rot": 0.0,
+                        "scale": {
+                            "x": 1.1342856884002686,
+                            "y": 1.1352940797805786
+                        },
+                        "scale_filter": "disable",
+                        "visible": true
+                    },
+                    {
+                        "align": 5,
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_align": 0,
+                        "bounds_type": 0,
+                        "crop_bottom": 0,
+                        "crop_left": 0,
+                        "crop_right": 0,
+                        "crop_top": 0,
+                        "name": "LastCommand",
+                        "pos": {
+                            "x": 397.0,
+                            "y": 919.0
+                        },
+                        "rot": 0.0,
+                        "scale": {
+                            "x": 1.6057143211364746,
+                            "y": 1.6100000143051147
+                        },
+                        "scale_filter": "disable",
+                        "visible": true
+                    }
+                ]
+            },
+            "sync": 0,
+            "volume": 1.0
+        }
+    ],
+    "transition_duration": 300,
+    "transitions": []
+}

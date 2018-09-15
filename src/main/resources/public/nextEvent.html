@@ -1,0 +1,116 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/globalize/0.1.1/globalize.min.js"></script>
+    <script type="text/javascript" src="http://cdn3.devexpress.com/jslib/15.2.5/js/dx.chartjs.js"></script>
+    <link href="/uiCSS.css" rel="stylesheet">
+
+    <script>
+        function loadHeader() {
+            $.get('/fonts.html', function(data) {
+                $('head').append(data);
+            });
+        };
+        loadHeader();
+    </script>
+
+    <script>
+        var refreshIntervalId = 0;
+
+        function zfill(number, size) {
+            number = number.toString();
+            while (number.length < size) number = "0" + number;
+            return number;
+        }
+
+        function formatSeconds(secondsRemaining) {
+            var days = Math.floor(secondsRemaining / 60 / 60 / 24);
+            var hours = Math.floor(secondsRemaining / 60 / 60) - (days * 24);
+            var minutes = Math.floor(secondsRemaining / 60) - ((hours * 60) + (days * 24 * 60));
+            var seconds = Math.floor(secondsRemaining - ((minutes * 60) + (hours * 60 * 60) + (days * 24 * 60 * 60)));
+            var milliseconds = Math.floor((secondsRemaining % 1) * 100);
+
+            var textDisplay = "";
+
+            if (days > 0) {
+                textDisplay += days + ":";
+            }
+            if (days > 0 || hours > 0) {
+                textDisplay += zfill(hours, 2) + ":";
+            }
+
+            if (days > 0 || hours > 0 || minutes > 0) {
+                textDisplay += zfill(minutes, 2) + ":";
+            }
+
+            textDisplay += zfill(seconds, 2) + ":";
+            textDisplay += zfill(milliseconds, 2) ;
+
+            return textDisplay;
+        }
+
+        function startTimer(nextEvent) {
+            refreshIntervalId = setInterval(function () {
+                var now = (new Date()).getTime();
+                var countdown = nextEvent - now;
+                var remaining = (countdown / 1000).toFixed(2);
+
+                if (remaining < 0) {
+                    remaining = 0;
+                }
+
+                var displayText = formatSeconds(remaining);
+
+                document.querySelector('#time').textContent = displayText;
+            }, 55);
+        }
+
+        var lastTimeStamp = (new Date()).getTime();
+
+        function updateCountdown(gameEvent) {
+            var nextEvent = gameEvent['nextEvent'];
+
+            if (lastTimeStamp != nextEvent) {
+                clearInterval(refreshIntervalId);
+                startTimer(nextEvent);
+                lastTimeStamp = nextEvent;
+            }
+        }
+
+        function updateText(gameEvent) {
+            if (gameEvent['eventType'] == "GAME_TICK") {
+                document.querySelector('#text').textContent = "Next Trade";
+            } else {
+                document.querySelector('#text').textContent = "Market Open";
+            }
+        }
+
+        setInterval(function () {
+            $.get('/nextEvent', function(data) {
+                var gameEvent = JSON.parse(data);
+                updateText(gameEvent);
+                updateCountdown(gameEvent);
+            });
+        }, 500);
+    </script>
+
+    <style>
+        .padded {
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="outerContainer">
+    <center class="padded"><span id="text"></span></center>
+    <hr>
+    <center class="padded"><span id="time">0</span></center>
+</div>
+
+</body>
+</html>

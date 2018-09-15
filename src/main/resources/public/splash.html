@@ -1,0 +1,271 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/globalize/0.1.1/globalize.min.js"></script>
+    <script type="text/javascript" src="http://cdn3.devexpress.com/jslib/15.2.5/js/dx.chartjs.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.0/velocity.min.js"></script>
+    <link href="/uiCSS.css" rel="stylesheet">
+    <script type='text/javascript' src="/miniset.js"></script>
+
+    <script>
+        function loadHeader() {
+            $.get('/fonts.html', function(data) {
+                $('head').append(data);
+            });
+        };
+        loadHeader();
+    </script>
+
+    <script>
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function createQuoteDiv(quote) {
+            var symbol = quote["symbol"];
+            var quoteDiv = $('<span>', {
+                class: "quote " + symbol,
+            });
+
+            var mostRecentPrice = parseFloat(quote['mostRecentPrice']).toFixed(2);
+
+            var percentReturn = quote['percentChange'].toFixed(2);
+            var isDecrease = percentReturn < 0;
+
+            quoteDiv.append($('<span>', {
+                class: "seperator",
+                text: "",
+            }));
+            quoteDiv.append($('<span>', {
+                class: "symbol",
+                text: quote["symbol"],
+            }));
+            quoteDiv.append($('<span>', {
+                class: "price",
+                text: "$" + mostRecentPrice,
+            }));
+            quoteDiv.append($('<span>', {
+                class: isDecrease ? "decrease" : "increase",
+                text: (isDecrease ? "▼" : "▲+") + percentReturn + "%",
+            }));
+
+            return quoteDiv;
+        }
+
+        function slideToLeft(marqueeId, duration) {
+            var element = document.querySelector('#' + marqueeId);
+            $.Velocity(
+                element,
+                {
+                    translateX: [
+                        -$('#' + marqueeId).width(),
+                        1280
+                    ]
+                },
+                {
+                    duration: duration,
+                    easing: 'linear',
+                    complete: function () {
+                        element.remove();
+                    },
+                }
+            );
+        }
+
+        function slideToRight(marqueeId, duration) {
+            var element = document.querySelector('#' + marqueeId);
+            $.Velocity(
+                element,
+                {
+                    translateX: [
+                        1280,
+                        -$('#' + marqueeId).width()
+                    ]
+                },
+                {
+                    duration: duration,
+                    easing: 'linear',
+                    complete: function () {
+                        element.remove();
+                    },
+                }
+            );
+        }
+
+        var marqueeCount = 0;
+
+        function runMarquee(marqueeId) {
+            var symbolCount = $('#' + marqueeId + ' .symbol').length;
+            var duration = symbolCount * getRandomInt(3500, 6500);
+
+            var width = $('#' + marqueeId).width() + 1280;
+            var oneScreenDuration = ((1280/width) * duration);
+            var timeToVisible = duration - oneScreenDuration;
+
+            setTimeout(updateQuotesList, timeToVisible);
+
+            var goLeft = Math.random() >= 0.5;
+
+            if (goLeft) {
+                slideToLeft(marqueeId, duration);
+            } else {
+                slideToRight(marqueeId, duration);
+            }
+        }
+
+        function updateQuotesList() {
+            $.get('/randomQuotes', function(data) {
+                var marqueeId = "marquee-" + marqueeCount;
+
+                $('#frame').append($('<div>', {
+                    class: "marquee",
+                    id: marqueeId,
+                }));
+
+                var yPos = getRandomInt(1, 720);
+                $('#' + marqueeId).css({top: yPos});
+
+                var quotes = JSON.parse(data);
+
+                // Add owned buy not displayed assets.
+                quotes.forEach(function(quote) {
+                    var quoteDiv = createQuoteDiv(quote);
+                    $('#' + marqueeId).append(quoteDiv);
+                });
+
+                var fontSize = getRandomInt(15, 48);
+                $('#' + marqueeId).css({"z-index": fontSize});
+                $('#' + marqueeId).children().each(function () {
+                    $(this).css({
+                        fontSize: fontSize
+                    });
+                });
+
+                runMarquee(marqueeId);
+
+                marqueeCount++;
+            }).fail(function() {
+                setTimeout(updateQuotesList, 10000);
+            });
+        }
+        function zfill(number, size) {
+            number = number.toString();
+            while (number.length < size) number = "0" + number;
+            return number;
+        }
+        function formatSeconds(secondsRemaining) {
+            var days = Math.floor(secondsRemaining / 60 / 60 / 24);
+            var hours = Math.floor(secondsRemaining / 60 / 60) - (days * 24);
+            var minutes = Math.floor(secondsRemaining / 60) - ((hours * 60) + (days * 24 * 60));
+            var seconds = Math.floor(secondsRemaining - ((minutes * 60) + (hours * 60 * 60) + (days * 24 * 60 * 60)));
+            var milliseconds = Math.floor((secondsRemaining % 1) * 100);
+
+            var textDisplay = "";
+
+            if (days > 0) {
+                textDisplay += days + ":";
+            }
+            if (days > 0 || hours > 0) {
+                textDisplay += zfill(hours, 2) + ":";
+            }
+
+            if (days > 0 || hours > 0 || minutes > 0) {
+                textDisplay += zfill(minutes, 2) + ":";
+            }
+
+            textDisplay += zfill(seconds, 2) + ":";
+            textDisplay += zfill(milliseconds, 2) ;
+
+            return textDisplay;
+        }
+
+        setInterval(function () {
+            var now = (new Date()).getTime();
+            var countdown = 1496149200000 - now;
+            var remaining = (countdown / 1000).toFixed(2);
+
+            if (remaining < 0) {
+                remaining = 0;
+            }
+
+            var displayText = formatSeconds(remaining);
+
+            document.querySelector('#time').textContent = displayText;
+        }, 35);
+
+        for(var i = 0; i < 10; i++) {
+            updateQuotesList();
+        }
+    </script>
+
+    <style>
+        .frame {
+            margin-top: 10px;
+            overflow: hidden;
+            width: 100%;
+        }
+        .quote {
+            display: table-cell;
+            margin: 25px;
+        }
+
+        .symbol {
+            margin-left: 50px;
+            margin-right: 15px;
+            color: LightSteelBlue;
+        }
+
+        .price {
+            color: grey;
+            margin-right: 15px;
+        }
+
+        .increase {
+            color: #00d097;
+        }
+
+        .decrease {
+            color: #fa5311;
+        }
+
+        .marquee {
+            margin: 0;
+            white-space: nowrap;
+            position: absolute;
+        }
+
+        .container {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            z-index: 72;
+        }
+
+        #time {
+            padding: 25px;
+            margin-top: 25px;
+            font-size: 78;
+            text-shadow: -6px -6px #6441A4;
+        }
+    </style>
+</head>
+<body>
+
+<center>
+<div class="container">
+    <center class="padded"><span id="time">0</span></center>
+</div>
+</center>
+
+<div class="frame" id="frame"></div>
+
+
+
+</body>
+</html>
+

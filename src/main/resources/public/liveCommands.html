@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/globalize/0.1.1/globalize.min.js"></script>
+    <script type="text/javascript" src="http://cdn3.devexpress.com/jslib/15.2.5/js/dx.chartjs.js"></script>
+    <script type="text/javascript" src="/reconnecting-websocket.js"></script>
+
+    <link href="/uiCSS.css" rel="stylesheet">
+
+    <script>
+        function loadHeader() {
+            $.get('/fonts.html', function(data) {
+                $('head').append(data);
+            });
+        };
+        loadHeader();
+    </script>
+
+    <style>
+
+        ul {
+            padding-left: 0;
+            margin-top: 0;
+        }
+
+        li {
+            padding-top: 15px;
+        }
+
+        .commands {
+            color: white;
+            list-style-type: none;
+            overflow-y: hidden;
+        }
+
+        .commands {
+            font-size: 12pt;
+            line-height: 1.5;
+        }
+    </style>
+
+    <script>
+        var webSocket = new ReconnectingWebSocket("ws://" + location.hostname + ":" + location.port + "/liveCommands/");
+
+        console.log("created websocket " + webSocket + " -> " + webSocket.readyState);
+
+        webSocket.onmessage = function (msg) {
+            addCommand(msg);
+        };
+
+        function addCommand(msg) {
+            var message = JSON.parse(msg.data);
+
+            var user = message['sender'];
+            var text = message['text']
+            var color = message['color']
+
+            var listItem = $("<li>");
+
+            listItem.append($('<span>', {
+                    class: "command",
+                    style: "color: " + color + ";",
+                    html: user + " ",
+                }));
+            listItem.append($('<span>', {
+                    class: "command",
+                    html: text.replace(/ /g,"&nbsp;"),
+                }));
+
+            $("#commandList").prepend(listItem);
+
+            var liCount = $("#commandList li").length;
+            if (liCount > 50) {
+                $("#commandList").find("li:nth-last-child(-n+1)").remove();
+            }
+        }
+    </script>
+
+</head>
+<body>
+
+
+<div class="outerContainer" id="allCommands">
+    <center>
+        <ul class="commands" id="commandList">
+            <li></li>
+        </ul>
+    </center>
+</div>
+
+
+</body>
+</html>

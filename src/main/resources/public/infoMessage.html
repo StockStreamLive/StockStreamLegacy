@@ -1,0 +1,134 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/globalize/0.1.1/globalize.min.js"></script>
+    <script type="text/javascript" src="http://cdn3.devexpress.com/jslib/15.2.5/js/dx.chartjs.js"></script>
+    <script type='text/javascript' src='http://cdn.jsdelivr.net/jquery.marquee/1.3.1/jquery.marquee.min.js'></script>
+    <script type='text/javascript' src="/easyhtml.js"></script>
+
+    <link href="/uiCSS.css" rel="stylesheet">
+
+    <script>
+        function loadHeader() {
+            $.get('/fonts.html', function(data) {
+                $('head').append(data);
+            });
+        };
+        loadHeader();
+    </script>
+
+    <script>
+        function fadeBetweenText(id, newText) {
+            $(id).fadeOut(function () {
+                $(id).text(newText).fadeIn(function () {
+                    $(id).parent().hide().show(0);
+                    $('.outerContainer').parent().hide().show(0);
+                    $(window).trigger('resize');
+                });
+            });
+        }
+
+        function updateInfoMessage(message, infoId) {
+            fadeBetweenText("#sender", message['sender']);
+            fadeBetweenText("#text", message['text']);
+            fadeBetweenText("#timeAgo", message['timeAgo']);
+            fadeBetweenText("#infoId", infoId);
+            $("#logo").fadeOut(function () {
+                $("#logo").attr("src", "/logos/" + message['platform'] + ".png").fadeIn();
+            });
+        }
+
+        function doUpdate() {
+            $.get('/infoMessage', function(data) {
+                var dataMap = JSON.parse(data);
+                var infoId = Object.keys(dataMap)[0];
+                var infoMessage = dataMap[infoId];
+                updateInfoMessage(infoMessage, infoId);
+            });
+        }
+
+        doUpdate();
+
+        setInterval(function () {
+            doUpdate();
+        }, 12000);
+    </script>
+
+    <style>
+        .assets {
+            color: white;
+            list-style-type: none;
+        }
+
+        .textContainer {
+            line-height: 1.5;
+            width: 100%;
+            height: 100%;
+            font-size: 2.3vw;
+            display:table-cell;
+            vertical-align:middle
+        }
+
+        .sender {
+            font-size: 17pt;
+            line-height: 1.5;
+            font-weight: bold;
+            color: #4099FF;
+            margin: 15px;
+        }
+
+        .timeAgo {
+            position: absolute;
+            bottom: 3px;
+            right: 3px;
+            margin: 10px;
+            color: gray;
+            font-size: 14pt;
+        }
+
+        img {
+            height: 75px;
+            top: 3px;
+            right: 3px;
+            margin: 15px;
+        }
+
+        .infoId {
+            position: absolute;
+            bottom: 3px;
+            left: 3px;
+            font-size: 25pt;
+            margin: 10px;
+            color: magenta;
+        }
+    </style>
+</head>
+<body>
+
+<div class="outerContainer">
+    <table style="width:100%; height:100%;" id="tableContainer">
+        <tr style="height: 65px;">
+            <td>
+                <p class="sender" id="sender"></p>
+            </td>
+            <td style="text-align: right;">
+                <img id="logo" src="">
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: middle; text-align: center; margin:10px;" colspan="2">
+                <div class="textContainer" id="text"></div>
+            </td>
+        </tr>
+    </table>
+    <div class="infoId" id="infoId"></div>
+    <div class="timeAgo" id="timeAgo"></div>
+</div>
+
+<br>
+
+</body>
+</html>

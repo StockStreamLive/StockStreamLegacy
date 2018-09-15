@@ -1,0 +1,123 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/globalize/0.1.1/globalize.min.js"></script>
+    <script type="text/javascript" src="http://cdn3.devexpress.com/jslib/15.2.5/js/dx.chartjs.js"></script>
+    <link href="/uiCSS.css" rel="stylesheet">
+
+    <script>
+        function loadHeader() {
+            $.get('/fonts.html', function(data) {
+                $('head').append(data);
+            });
+        };
+        loadHeader();
+    </script>
+
+    <script>
+        var colors = [
+                    'red',
+                    'yellow',
+                    'SpringGreen ',
+                    'orange',
+                    'pink',
+                    'cyan',
+                    'fuchsia',
+                    'LightPink',
+                    'LightYellow',
+                    'orangered',
+                    'orchid',
+                    'lime'
+                ];
+
+        function randomizeColors(element) {
+            element.html(function() {
+                return $.map($(this).text().split(''), function(el, i) {
+                    var randomColor = Math.floor(Math.random() * (colors.length));
+                    return '<span style="color: ' + colors[randomColor] + '">' + el + '</span>';
+                }).join('');
+            });
+        }
+
+        function updateTopDonor(topDonor) {
+            $('.topDonor').remove();
+
+            $('.innerContainer').append($('<div>', {
+                class: "topDonor",
+                text: topDonor,
+            }));
+
+            randomizeColors($('.topDonor'));
+        }
+
+        function doUpdate() {
+            $.get('/topDonor', function(data) {
+                var topDonor = JSON.parse(data);
+                updateTopDonor(topDonor);
+            });
+        }
+
+        setInterval(function () {
+            doUpdate();
+        }, 10000);
+
+        doUpdate();
+
+        function doRefresh() {
+            randomizeColors($('.title'));
+            randomizeColors($('.topDonor'));
+        }
+
+        function refreshColors() {
+            try {
+                requestAnimationFrame(doRefresh);
+            } catch (e) {
+                console.error(e);
+            }
+            setTimeout(function () {
+                refreshColors();
+            }, 500);
+        }
+
+        refreshColors();
+
+    </script>
+
+    <style>
+        hr {
+            color: white;
+        }
+
+        .topDonor {
+            color: white;
+            margin-top: 1px;
+            font-size: 18pt;
+            line-height: 1.1;
+        }
+
+        .title {
+            font-size: 18pt;
+            font-weight: bold;
+            margin: 1px;
+        }
+
+        .innerContainer {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="outerContainer">
+    <center class="innerContainer">
+        <span class="title">TOP DONATION</span>
+        <hr>
+        <span class="topDonor" id="topDonor"></span>
+    </center>
+</div>
+
+</body>
+</html>

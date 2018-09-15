@@ -1,0 +1,70 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/globalize/0.1.1/globalize.min.js"></script>
+    <script type='text/javascript' src='http://cdn.jsdelivr.net/jquery.marquee/1.3.1/jquery.marquee.min.js'></script>
+    <script type='text/javascript' src="/easyhtml.js"></script>
+    <link href="/uiCSS.css" rel="stylesheet">
+    
+    <script>
+        function loadHeader() {
+            $.get('/fonts.html', function(data) {
+                $('head').append(data);
+            });
+        };
+        loadHeader();
+    </script>
+
+    <script>
+        function updateAccountStatus(accountStatus) {
+            var balance = numberWithCommas(accountStatus['spendableBalance'].toFixed(2));
+            $("#spendableCash").html("<span class=\"balance\">$" + balance + "</span>");
+        }
+
+        function doUpdate() {
+            $.get('/accountStatus', function(data) {
+                var accountStatus = JSON.parse(data);
+                updateAccountStatus(accountStatus);
+            });
+        }
+
+        doUpdate();
+
+        setInterval(function () {
+            doUpdate();
+        }, 2000);
+    </script>
+
+    <style>
+        .assets {
+            color: white;
+            list-style-type: none;
+        }
+
+        span {
+            color: white;
+        }
+
+        .balance {
+            font-size: 16pt;
+            margin: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="outerContainer">
+    <center>
+        <h3>Cash</h3>
+        <span class="balance" id="spendableCash"></span>
+        <br>
+    </center>
+</div>
+
+<br>
+
+</body>
+</html>

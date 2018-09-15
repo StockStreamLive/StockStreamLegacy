@@ -1,0 +1,246 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/globalize/0.1.1/globalize.min.js"></script>
+    <script type="text/javascript" src="http://cdn3.devexpress.com/jslib/15.2.5/js/dx.chartjs.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.0/velocity.min.js"></script>
+    <link href="/uiCSS.css" rel="stylesheet">
+    <script type='text/javascript' src="/miniset.js"></script>
+
+    <script>
+        function loadHeader() {
+            $.get('/fonts.html', function(data) {
+                $('head').append(data);
+            });
+        };
+        loadHeader();
+    </script>
+
+    <script>
+        function createAssetDiv(asset) {
+            var assetKey = asset["symbol"];
+            var assetDiv = $("<div class=\"asset " + assetKey + "\">");
+
+            var mostRecentPrice = parseFloat(asset['quote']['mostRecentPrice']).toFixed(2);
+
+            var avgBuyPrice = asset['avgBuyPrice'].toFixed(2);
+            var percentReturn = asset['pctReturn'].toFixed(2);
+
+            var totalValueThen = (asset['shares'] * avgBuyPrice).toFixed(2);
+            var totalValueNow = (asset['shares'] * mostRecentPrice).toFixed(2);
+
+            var valueChange = (totalValueThen - totalValueNow).toFixed(2);
+            var isDecrease = percentReturn < 0;
+            var shares = asset['shares'];
+            assetDiv.removeClass("redOutline");
+            assetDiv.removeClass("greenOutline");
+
+            assetDiv.addClass(isDecrease ? "redOutline" : "greenOutline");
+
+            assetDiv.append($('<div>', {
+                class: "symbol",
+                text: asset["symbol"],
+            }));
+            assetDiv.append($('<div>', {
+                class: "shares",
+                text: shares + " " + (shares > 1 ? "shares" : "share"),
+            }));
+            assetDiv.append($('<br>'));
+            assetDiv.append($('<div>', {
+                class: "totalValueNow",
+                text: "$" + totalValueNow,
+            }));
+            assetDiv.append($('<br>'));
+            assetDiv.append($('<div>', {
+                class: "shareValue",
+                text: "Paid $" + avgBuyPrice,
+            }));
+            assetDiv.append($('<br>'));
+            assetDiv.append($('<div>', {
+                class: "shareValue",
+                text: "Now $" + mostRecentPrice,
+            }));
+            assetDiv.append($('<br>'));
+            assetDiv.append($('<div>', {
+                class: (isDecrease ? "decrease" : "increase") + " change",
+                text: (isDecrease ? "▼" : "▲") + Math.abs(percentReturn).toFixed(2) + "%",
+            }));
+            assetDiv.append($('<br>'));
+            assetDiv.append($('<div>', {
+                class: (isDecrease ? "decrease" : "increase") + " change",
+                text: (isDecrease ? "-" : "+") + "$" + Math.abs(valueChange).toFixed(2),
+            }));
+
+            return assetDiv;
+        }
+
+        function slideDown(marqueeId, duration) {
+            var element = document.querySelector('#' + marqueeId);
+            $.Velocity(
+                element,
+                {
+                    translateY: [
+                        -$('#' + marqueeId).height(),
+                        850
+                    ]
+                },
+                {
+                    duration: duration,
+                    easing: 'linear',
+                    complete: function () {
+                        element.remove();
+                    },
+                }
+            );
+        }
+
+        var marqueeCount = 0;
+
+        function runMarquee(marqueeId) {
+
+            var height = $('#' + marqueeId).height() + 850;
+            var duration = height * 12.5;
+
+            var oneScreenDuration = ((850/height) * duration);
+            var timeToTopVisible = duration - oneScreenDuration;
+
+            setTimeout(updateQuotesList, timeToTopVisible);
+
+            slideDown(marqueeId, duration);
+
+            marqueeCount++;
+        }
+
+        function updateQuotesList() {
+            $.get('/assetsList', function(data) {
+                var marqueeId = 'marquee-' + marqueeCount;
+
+                $('#frame').append($('<div>', {
+                    class: "marquee",
+                    id: marqueeId,
+                }));
+
+                var assets = JSON.parse(data);
+
+                // Add owned buy not displayed assets.
+                assets.forEach(function(quote) {
+                    var assetDiv = createAssetDiv(quote);
+                    $('#' + marqueeId).append(assetDiv);
+                    $('#' + marqueeId).append('<br>');
+                });
+
+                runMarquee(marqueeId);
+            }).fail(function() {
+                setTimeout(updateQuotesList, 10000);
+            });
+        }
+
+        updateQuotesList();
+    </script>
+
+    <style>
+        .frame {
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        h3 {
+            color: white;
+        }
+
+        span {
+            color: white;
+        }
+
+        .asset {
+            border-radius: 10px;
+            width: auto;
+            height: 100%;
+            margin: 15px;
+        }
+
+        .redOutline {
+            outline: 15px solid #fa5311;
+        }
+
+        .greenOutline {
+            outline: 15px solid #00d097;
+        }
+
+        .greyOutline {
+            outline: 15px solid grey;
+        }
+
+        .symbol {
+            font-size: 40pt;
+            padding: 10px;
+            color: white;
+        }
+
+        .shares {
+            font-size: 18pt;
+            margin: 10px;
+        }
+
+        .totalValueNow {
+            font-size: 32pt;
+            margin: 2px;
+        }
+
+        .reservedCash {
+            font-size: 32pt;
+            margin: 2px;
+        }
+
+        .reservedText {
+            font-size: 32pt;
+            margin: 2px;
+            color: slategrey;
+        }
+
+        .shareValue {
+            font-size: 22pt;
+            margin: 4px;
+        }
+
+        .increase {
+            margin: 2px;
+            color: #00d097;
+        }
+
+        .decrease {
+            margin: 2px;
+            color: #fa5311;
+        }
+
+        .movement {
+            float: left;
+            margin-top: 2px;
+            margin-bottom: 2px;
+            margin-left: 5px;
+            font-size: 45pt;
+        }
+
+        .marquee {
+            margin: 0;
+            width: 100%;
+            white-space: nowrap;
+            position: absolute;
+        }
+
+        .change {
+            font-size: 32pt;
+            margin-top: 2px;
+            vertical-align:middle;
+        }
+    </style>
+</head>
+<body>
+
+<center class="frame" id="frame"></center>
+
+</body>
+</html>
